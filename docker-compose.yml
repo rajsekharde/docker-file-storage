@@ -9,6 +9,8 @@ services:
       - app-network
     volumes:
       - ./file-storage:/data
+    depends_on:
+      - redis
   
   worker:
     container_name: worker
@@ -18,6 +20,7 @@ services:
       - app-network
     depends_on:
       - api
+      - redis
     volumes:
       - ./file-storage:/data
   
@@ -31,6 +34,15 @@ services:
       - app-network
     depends_on:
       - api
+  
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
 
 networks:
   app-network:
